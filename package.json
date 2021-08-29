@@ -1,0 +1,25 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "description": "Enjoy convenient scheduling",
+  "private":true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch":"webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/owuracoder/Todo-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/owuracoder/Todo-app/issues"
+  },
+  "homepage": "https://github.com/owuracoder/Todo-app#readme",
+  "devDependencies": {
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  }
+}
