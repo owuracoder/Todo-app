@@ -17,7 +17,10 @@
         <div class="schedule-box">
             <div class="project-area">
                 <div class="project-head-wrapper">
-                    <h2 class="project-area-header">Projects</h2><i id="header-icon" class="fas fa-plus"></i>              
+                    <h2 class="project-area-header">Projects</h2>
+                    <div class="header-icon">
+                        <i class="fas fa-plus"></i>              
+                    </div>
                 </div>
                 <div class="project-itms-wrapper">
                     <h3><i id="dimGray" class="fas fa-circle fa-xs"></i>Personal</h3>
@@ -26,7 +29,27 @@
                     <h3><i id="black" class="fas fa-circle fa-xs"></i>Errands</h3>
                 </div>
             </div>
-            <div class="project-notes"></div>
+            <div class="project-notes">
+                <div class="project-note-name">
+                    <div class="project-note-name-wrapper">
+                        <h2 class="proj-note-head">Personal</h2>
+                        <div class="proj-note-head-icon">
+                            <i id="header-icon" class="fas fa-plus"></i>
+                            <h3>Add Task</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-note-input">
+                    <textarea id="notes" name="notes" placeholder="write down what you want to do today">
+                    </textarea>
+                </div>
+                <div class="project-wrapper">
+                    <input type="date" id="schedule" name="schedule">
+                    <h3 class="project-type">
+                        Personal
+                    </h3>
+                </div>
+            </div>
         </div>
     </div>
     
