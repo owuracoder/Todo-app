@@ -68,28 +68,13 @@
   background-color: #d5d7dd;
 }
 
-.black-circle,
-.gray-circle,
-.silver-circle,
-.pink-circle {
-  background: black;
+.circle {
+  background: #45657a;
   width: 10px;
   height: 10px;
   border-radius: 5px;
   display: inline-block;
   margin: 0px 10px;
-}
-
-.gray-circle {
-  background: #45657a;
-}
-
-.silver-circle {
-  background: #c8a8b7;
-}
-
-.pink-circle {
-  background: #ca619c;
 }
 
 .circles-wrapper {
@@ -106,10 +91,7 @@
   background: #d5d7dd;
 }
 
-.black-circle-head,
-.gray-circle-head,
-.pink-circle-head,
-.silver-circle-head {
+.circle-head {
   font-weight: 100;
 }
 
@@ -362,7 +344,6 @@ label {
   padding: 5px;
   width: 60px;
   text-align: center;
-  cursor: pointer;
 }
 
 .cancel-project {

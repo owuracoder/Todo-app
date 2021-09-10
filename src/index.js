@@ -14,14 +14,14 @@ const UIController = {
 
     createProjectList(projectContainer,userInput){
         const newDiv = document.createElement('div')
-        newDiv.classList.add('gray-circle')
+        newDiv.classList.add('circle')
         newDiv.style.background = this.generateDynamicColors()
 
         const cirleWrapper = document.createElement('div')
         cirleWrapper.classList.add('circles-wrapper')
 
         const circleHead  = document.createElement('h3')
-        circleHead.classList.add('gray-cirlce-head')
+        circleHead.classList.add('circle-head')
         circleHead.textContent = `${userInput.value}`
        
         cirleWrapper.appendChild(newDiv)
@@ -34,6 +34,7 @@ const UIController = {
 
     removeClassFromElement(element,className){
         element.classList.remove(className)
+        
     },
 
     generateDynamicColors(){
