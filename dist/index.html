@@ -11,6 +11,18 @@
 </head>
 <body>
     <div class="container">
+        <div class="custproject" id="add-proj-input">
+            <h3 class="proj-head">Add Project</h3>
+            <div class="custproject-format">
+                <label for="Project">Name</label>
+                <input type="text" name="project" id="project" class="project">
+            </div>
+            <div class="custproj-action">
+                <button class="cancel-project" id="cancel-btn-input">Cancel</button>
+                <button class="add-project" id="add-btn-input">Add</button>
+            </div>
+        </div>
+
         <div class="logo-bar">
             <h1>Scheduler <i class="fas fa-clipboard-list logo-icon"></i></h1>
         </div>
@@ -18,36 +30,62 @@
             <div class="project-area">
                 <div class="project-head-wrapper">
                     <h2 class="project-area-header">Projects</h2>
-                    <div class="header-icon">
+                    <div class="header-icon" id="project-icon">
                         <i class="fas fa-plus"></i>              
                     </div>
                 </div>
-                <div class="project-itms-wrapper">
-                    <h3><i id="dimGray" class="fas fa-circle fa-xs"></i>Personal</h3>
-                    <h3><i id="silver" class="fas fa-circle fa-xs"></i>Shopping</h3>
-                    <h3><i id="pink" class="fas fa-circle fa-xs"></i>Work</h3>
-                    <h3><i id="black" class="fas fa-circle fa-xs"></i>Errands</h3>
+                <div class="project-itms-wrapper" id="proj-wrap">
+                    <!-- <div class="circles-wrapper">
+                        <div class="gray-circle"></div>
+                        <h3 class="gray-circle-head">Personal</h3>
+                    </div>
+                    <div class="circles-wrapper">
+                        <div class="silver-circle"></div>
+                        <h3 class="silver-circle-head">Shopping</h3>
+                    </div>
+                    <div class="circles-wrapper">
+                        <div class="pink-circle"></div>
+                        <h3 class="pink-circle-head">Work</h3>
+                    </div>
+                    <div class="circles-wrapper">
+                        <div class="black-circle"></div>
+                        <h3 class="black-circle-head">Errands</h3>
+                    </div> -->
                 </div>
             </div>
             <div class="project-notes">
                 <div class="project-note-name">
                     <div class="project-note-name-wrapper">
                         <h2 class="proj-note-head">Personal</h2>
-                        <div class="proj-note-head-icon">
+                        <div id="plus-sign" class="proj-note-head-icon">
                             <i id="header-icon" class="fas fa-plus"></i>
                             <h3>Add Task</h3>
                         </div>
                     </div>
                 </div>
-                <div class="project-note-input">
-                    <textarea id="notes" name="notes" placeholder="write down what you want to do today">
-                    </textarea>
-                </div>
-                <div class="project-wrapper">
-                    <input type="date" id="schedule" name="schedule">
-                    <h3 class="project-type">
-                        Personal
-                    </h3>
+                <div class="project-description-space" id="proj-area">
+                    <div class="project-note-input">
+                        <textarea id="notes" name="notes" placeholder="write down what you want to do today"></textarea>
+                    </div>
+                    <div class="project-wrapper">
+                        <div class="project-sub-wrapper">
+                            <input type="date" id="schedule" name="schedule">
+                            <select name="projects-choice" id="project-choice">
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                                <option value="hamster">Hamster</option>
+                                <option value="parrot">Parrot</option>
+                                <option value="spider">Spider</option>
+                                <option value="goldfish">Goldfish</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="project-note-action-btns">
+                        <div class="action-btns">
+                            <button id="addBtn" class="addBtn">Add Task</button>
+                            <button id="cancelBtn" class="cancelBtn">Cancel</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

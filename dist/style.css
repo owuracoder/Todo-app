@@ -9,6 +9,7 @@
   font-family: 'Roboto', sans-serif;
   height: 100vh;
   width: 100vw;
+  position: relative;
 }
 
 .logo-bar {
@@ -67,36 +68,55 @@
   background-color: #d5d7dd;
 }
 
-.project-itms-wrapper > h3 {
-  padding: 10px 0px 10px;
-  font-weight: 100;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: 0.2s;
+.black-circle,
+.gray-circle,
+.silver-circle,
+.pink-circle {
+  background: black;
+  width: 10px;
+  height: 10px;
   border-radius: 5px;
+  display: inline-block;
+  margin: 0px 10px;
 }
 
-.project-itms-wrapper > h3:hover {
-  background-color: #d5d7dd;
+.gray-circle {
+  background: #45657a;
 }
 
-.project-itms-wrapper i {
-  padding: 0px 15px;
+.silver-circle {
+  background: #c8a8b7;
 }
 
-#dimGray {
-  color: #45657a;
+.pink-circle {
+  background: #ca619c;
 }
 
-#silver {
-  color: #c8a8b7;
+.circles-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 5px;
+  padding: 10px 0px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-#pink {
-  color: #ca619c;
+.circles-wrapper:hover {
+  background: #d5d7dd;
+}
+
+.black-circle-head,
+.gray-circle-head,
+.pink-circle-head,
+.silver-circle-head {
+  font-weight: 100;
 }
 
 .project-notes {
+  display: flex;
+  flex-direction: column;
+  background-color: red;
   background: #f5f7f4;
   width: 75%;
 }
@@ -150,6 +170,7 @@
 }
 
 .project-note-input textarea {
+  padding: 10px;
   resize: none;
   width: 90%;
   height: 100px;
@@ -171,14 +192,13 @@
 
 .project-note-input textarea:focus {
   outline: none;
-  /* border: 1px solid rgba(172, 171, 171, 0.867); */
 }
 
 input[type='date'] {
   display: inline-block;
   font-size: 15px;
   padding: 5px;
-  width: 119px;
+  width: 160px;
   font-weight: 100;
   text-align: center;
   border-radius: 5px;
@@ -191,21 +211,44 @@ input[type='date'] {
 
 input[type='date']:focus {
   border: 1px solid rgba(172, 171, 171, 0.867);
-  /* border: none; */
 }
 
-input[type='date']::before {
-  content: 'Schedule';
-  font-weight: 400;
-  color: #555;
+select {
+  background: rgba(250, 250, 250, 0.4);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-weight: 100;
+  width: 160px;
+}
+
+select:focus {
+  outline: none;
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {
   opacity: 0.5;
 }
 
-.project-wrapper {
-  margin: 0px 66px;
+.project-wrapper,
+.project-note-action-btns {
+  padding: 0px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-wrapper .project-type {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px;
+  display: inline-block;
+  color: #555;
+  font-weight: 400;
+}
+
+.project-sub-wrapper,
+.action-btns {
+  width: 90%;
   display: flex;
   border: 1px solid #ddd;
   border-top: none;
@@ -215,11 +258,114 @@ input[type='date']::-webkit-calendar-picker-indicator {
   padding: 5px;
 }
 
-.project-wrapper .project-type {
-  border: 1px solid #ddd;
+.action-btns {
+  padding: 15px 0px;
+  border: none;
+}
+
+.action-btns .addBtn,
+.cancelBtn {
+  border: none;
+  padding: 10px 10px;
   border-radius: 5px;
+  background: #47a26c;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 0 3px;
+}
+
+.cancelBtn {
+  background: rgb(214, 125, 125);
+  color: white;
+}
+
+.project-description-space {
+  display: none;
+}
+
+.active-block {
+  display: block;
+}
+
+.custproject {
+  box-shadow: 3px 3px 5px #dddd, -3px -3px 5px #dddd;
+  background-color: #ffffff;
+  width: 250px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 8px;
+  position: absolute;
+  left: -40%;
+  top: 40%;
+  transition: all 0.9s ease-in-out;
+}
+
+.custproject.show {
+  left: 40%;
+}
+
+label {
+  font-weight: 100;
+  padding: 5px 0 5px 5px;
+  text-align: left;
+  width: 100%;
+}
+
+.project {
+  border-radius: 10px;
+  border: 1px solid #dddddd;
+  padding: 5px;
+  font-family: 300;
+  width: 100%;
+}
+
+.project:focus {
+  outline: none;
+}
+
+.proj-head {
+  border-bottom: 1px solid#dddddd;
+  width: 100%;
+  padding: 10px 0px 10px;
+  text-align: center;
+}
+
+.custproject-format {
+  width: 100%;
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px;
+}
+
+.custproj-action {
+  border-top: 1px solid #dddddd;
+  width: 100%;
   padding: 10px;
-  display: inline-block;
-  color: #555;
-  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+
+.add-project,
+.cancel-project {
+  border-radius: 8px;
+  border: 0;
+  padding: 5px;
+  width: 60px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.cancel-project {
+  background-color: #b95b5e;
+  color: #fff;
 }
