@@ -15,7 +15,7 @@
             <h3 class="proj-head">Add Project</h3>
             <div class="custproject-format">
                 <label for="Project">Name</label>
-                <input type="text" name="project" id="project" class="project">
+                <input type="text" name="project" id="project" class="project" maxlength="8">
             </div>
             <div class="custproj-action">
                 <button class="cancel-project" id="cancel-btn-input">Cancel</button>
@@ -63,6 +63,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="show-projects-section">
+                    <h2>this is where i am going to show my projects</h2>
+                </div>
                 <div class="project-description-space" id="proj-area">
                     <div class="project-note-input">
                         <textarea id="notes" name="notes" placeholder="write down what you want to do today"></textarea>
@@ -71,12 +74,6 @@
                         <div class="project-sub-wrapper">
                             <input type="date" id="schedule" name="schedule">
                             <select name="projects-choice" id="project-choice">
-                                <option value="dog">Dog</option>
-                                <option value="cat">Cat</option>
-                                <option value="hamster">Hamster</option>
-                                <option value="parrot">Parrot</option>
-                                <option value="spider">Spider</option>
-                                <option value="goldfish">Goldfish</option>
                             </select>
                         </div>
                     </div>
