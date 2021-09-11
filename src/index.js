@@ -4,8 +4,8 @@ const UIController = {
         return document.getElementById(elementId)
     },
 
-    displayTextBox(element){
-        element.style.display = 'block'
+    displayTextBox(element,activeClass){
+        element.classList.add(activeClass)
     },
 
     addClassToElement(element,className){
@@ -13,23 +13,26 @@ const UIController = {
     },
 
     createProjectList(projectContainer,userInput){
-        const newDiv = document.createElement('div')
-        newDiv.classList.add('circle')
-        newDiv.style.background = this.generateDynamicColors()
-
-        const cirleWrapper = document.createElement('div')
-        cirleWrapper.classList.add('circles-wrapper')
-
-        const circleHead  = document.createElement('h3')
-        circleHead.classList.add('circle-head')
-        circleHead.textContent = `${userInput.value}`
-       
-        cirleWrapper.appendChild(newDiv)
-        cirleWrapper.appendChild(circleHead)
-
-        projectContainer.appendChild(cirleWrapper)
-
-        userInput.value = ''
+        if(userInput.value != ''){
+            const newDiv = document.createElement('div')
+            newDiv.classList.add('circle')
+            newDiv.style.background = this.generateDynamicColors()
+    
+            const cirleWrapper = document.createElement('div')
+            cirleWrapper.classList.add('circles-wrapper')
+            cirleWrapper.classList.add('del-button')
+    
+            const circleHead  = document.createElement('h3')
+            circleHead.classList.add('circle-head')
+            circleHead.textContent = `${userInput.value}`
+           
+            cirleWrapper.appendChild(newDiv)
+            cirleWrapper.appendChild(circleHead)
+    
+            projectContainer.appendChild(cirleWrapper)
+    
+            userInput.value = ''
+        }
     },
 
     removeClassFromElement(element,className){
@@ -40,26 +43,84 @@ const UIController = {
     generateDynamicColors(){
         let randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
        return randomColor;
-    }
+    },
+
+    removeProject(eventObject,classIdentifier){
+
+        if(eventObject.target.classList.contains(classIdentifier)){
+            eventObject.target.remove()
+            const text = eventObject.target.textContent
+            this.removeItemFromProject(text)
+        }
+    },
+
+    createListProject(projectContainer){
+        this.clearAllElements(projectContainer)
+        this.projectList.forEach((project) => {
+            const option = document.createElement('option')
+            option.setAttribute("value",`${project}`)
+            option.textContent = `${project}`
+
+            projectContainer.appendChild(option)
+        })
+           
+    },
+
+    clearAllElements(ElementParent){
+        ElementParent.innerHTML = ''
+    },
+
+    clearInputArea(elements){
+        elements.forEach((element) => {
+            element.value = ''
+        })
+    },
 
 }
 
 //Todo object that handles application logic
 const Todo = {
+    projectList: [],
+
+    todoList: [],
+
+    initTodoItems(notes,date,projChoice){
+        const tempObj = { }
+        tempObj.notes = notes
+        tempObj.date = date
+        tempObj.projChoice = projChoice
+
+        this.todoList.push(tempObj)
+
+        console.log(this.todoList)
+    },
+
+    addProjects(project){
+        this.projectList.push(project)
+    },
+
+    removeItemFromProject(text){
+        this.projectList.forEach((project) => {
+            if(text === project){
+                const idx = this.projectList.indexOf(project)
+                this.projectList.splice(idx,1)
+            }
+        })
+    },
 
 }
 
-const todoApp = function(){
-    const myUI = Object.create(UIController)
+Object.setPrototypeOf(UIController,Todo)
 
+const todoApp = function(){
+
+    const myUI = Object.create(UIController)
     const myTodo = Object.create(Todo)
 
-    const addTaskBtn = myUI.selectElement('header-icon')
-
-    addTaskBtn.addEventListener('click',() => {
+    const addProjBtn = myUI.selectElement('header-icon')
+    addProjBtn.addEventListener('click',() => {
         const noteBox = myUI.selectElement('proj-area')
-        myUI.displayTextBox(noteBox)
-        
+        myUI.displayTextBox(noteBox,'active-block')       
     })
 
 
@@ -67,26 +128,46 @@ const todoApp = function(){
     createProjectBtn.addEventListener('click',() => {
         const addProjectInputText = myUI.selectElement('add-proj-input')
         myUI.addClassToElement(addProjectInputText,'show')
-
     })
 
 
     const inputAddButton = myUI.selectElement('add-btn-input')
     inputAddButton.addEventListener('click',() => {
         const textInput = myUI.selectElement('project')
+        myTodo.addProjects(textInput.value)
         const selectProjectContainer = myUI.selectElement('proj-wrap')
         myUI.createProjectList(selectProjectContainer,textInput)
 
+        const projectListContainer = myUI.selectElement('project-choice')
+        myUI.createListProject(projectListContainer)
+       
     })
-
 
     const inputCancelButton = myUI.selectElement('cancel-btn-input')
     inputCancelButton.addEventListener('click',() => {
         const addProjectInputText = myUI.selectElement('add-proj-input')
         myUI.removeClassFromElement(addProjectInputText,'show')
+    }) 
+    
+    const allProjectsContainer = myUI.selectElement('proj-wrap')
+    allProjectsContainer.addEventListener('click',(event)=>{
+        myUI.removeProject(event,'del-button')
+        const projectListContainer = myUI.selectElement('project-choice')
+        myUI.createListProject(projectListContainer) 
     })
-    
-    
+
+    const createTaskBtn = myUI.selectElement('addBtn')
+    createTaskBtn.addEventListener('click',() => {
+        const noteArea = myUI.selectElement('notes')
+        const scheduleArea = myUI.selectElement('schedule')
+        const projChoiceArea = myUI.selectElement('project-choice')
+
+        myTodo.initTodoItems(noteArea.value,scheduleArea.value,projChoiceArea.value)
+
+        myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
+        
+    })
+
 }
 
 todoApp()

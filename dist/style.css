@@ -93,6 +93,7 @@
 
 .circle-head {
   font-weight: 100;
+  flex: 1;
 }
 
 .project-notes {
@@ -266,7 +267,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   display: none;
 }
 
-.active-block {
+.project-description-space.active-block {
   display: block;
 }
 
@@ -344,9 +345,25 @@ label {
   padding: 5px;
   width: 60px;
   text-align: center;
+  cursor: pointer;
 }
 
 .cancel-project {
   background-color: #b95b5e;
   color: #fff;
+}
+
+.del-button::after {
+  padding: 5px;
+  font-family: 'Font Awesome 5 Free';
+  color: 300;
+  content: '\f2ed';
+  color: rgb(170, 165, 165);
+  opacity: 0;
+  text-align: right;
+  flex: 1;
+}
+
+.del-button:hover::after {
+  opacity: 1;
 }
