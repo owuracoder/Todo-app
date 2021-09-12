@@ -99,9 +99,9 @@
 .project-notes {
   display: flex;
   flex-direction: column;
-  background-color: red;
   background: #f5f7f4;
   width: 75%;
+  padding: 0px 30px;
 }
 
 .proj-note-head-icon {
@@ -284,6 +284,7 @@ input[type='date']::-webkit-calendar-picker-indicator {
   position: absolute;
   left: -40%;
   top: 40%;
+  z-index: 5;
   transition: all 0.9s ease-in-out;
 }
 
@@ -366,4 +367,59 @@ label {
 
 .del-button:hover::after {
   opacity: 1;
+}
+
+.show-projects-section {
+  padding: 10px 10px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  background: #dddd;
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px #b8b7b7dd;
+  margin-bottom: 20px;
+}
+
+.show-projects-section .projectLabel {
+  font-weight: 300;
+  font-size: 18px;
+}
+
+.show-projects-section .projectCheckBox {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 0.5px solid #ddd;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.5s ease-in;
+}
+
+.projectCheckBox:checked {
+  background: #829997;
+}
+
+.todo-note {
+  padding: 5px;
+}
+
+.show-projects-section .todo-date {
+  display: flex;
+  gap: 10px;
+  font-weight: 100;
+  padding: 10px;
+  border-bottom: 1px solid rgb(206, 205, 205);
+  width: 100%;
+}
+
+.show-projects-section .todo-date.show-date-icon::before {
+  font-family: 'Font Awesome 5 Free';
+  color: 300;
+  content: '\f073';
+  color: rgb(170, 165, 165);
 }
