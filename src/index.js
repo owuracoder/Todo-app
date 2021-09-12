@@ -84,6 +84,7 @@ const UIController = {
         const showProjectSection = document.createElement('div')
         showProjectSection.classList.add('show-projects-section')
 
+
         const selctProjectSection = document.querySelector('.show-projects-section')
 
         if(selctProjectSection){
@@ -94,7 +95,7 @@ const UIController = {
             const projectHead = this.selectElement('proj-type-head')
             projectHead.textContent = `${todo.projChoice}`
 
-            showProjectSection.innerHTML += `<div class="todo-note">
+            showProjectSection.innerHTML += `<div class="todo-note" id="${todo.id}">
             <input type="checkbox" name="projectName" id="ProjectName" class="projectCheckBox">
             <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
         </div>
@@ -107,6 +108,31 @@ const UIController = {
 
     },
 
+    removeTaskInputBox(element,className){
+        element.classList.remove(`${className}`)
+    },
+
+    targetIsDone(eventObject){
+        if(eventObject.target.id === 'ProjectName'){
+           const parentTarg = eventObject.target.parentElement.parentElement
+            const elementId = eventObject.target.parentElement.id
+           this.waitAndRemove(parentTarg,elementId,2000)
+        }
+    },
+
+    waitAndRemove(element,elementId,time){
+        setTimeout(() => {
+            element.remove()
+            this.todoList.forEach((todo)=>{
+
+                if(todo.id === parseInt(elementId)){
+                   const idx = this.todoList.indexOf(todo)
+                   this.todoList.splice(idx,1)
+                    console.log(this.todoList)
+                }
+            })
+        },time)
+    }
 }
 
 //Todo object that handles application logic
@@ -120,7 +146,7 @@ const Todo = {
         tempObj.notes = notes
         tempObj.date = date
         tempObj.projChoice = projChoice
-
+        tempObj.id = this.generateCodeForElements()
         this.todoList.push(tempObj)
 
         console.log(this.todoList)
@@ -138,6 +164,10 @@ const Todo = {
             }
         })
     },
+
+    generateCodeForElements(){
+        return Math.floor(Math.random() * 1000)
+    }
 
 }
 
@@ -199,6 +229,21 @@ const todoApp = function(){
 
         myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
         
+    })
+
+    const cancelTaskBtn = myUI.selectElement('cancelBtn')
+
+    cancelTaskBtn.addEventListener('click',() => {
+
+        const noteBox = myUI.selectElement('proj-area')
+        
+        myUI.removeTaskInputBox(noteBox,'active-block')
+    })
+
+    const projectNoteContainer = myUI.selectElement('project-notes')
+    projectNoteContainer.addEventListener('click',(event) => {
+
+        myUI.targetIsDone(event)
     })
 
 }
