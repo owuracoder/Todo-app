@@ -76,6 +76,37 @@ const UIController = {
         })
     },
 
+    showProjectInTheDom(){
+        const selctProjectNote = this.selectElement('project-notes')
+
+        const projectArea = this.selectElement('proj-area')
+
+        const showProjectSection = document.createElement('div')
+        showProjectSection.classList.add('show-projects-section')
+
+        const selctProjectSection = document.querySelector('.show-projects-section')
+
+        if(selctProjectSection){
+            selctProjectSection.remove()
+        }
+
+        this.todoList.forEach((todo) => {
+            const projectHead = this.selectElement('proj-type-head')
+            projectHead.textContent = `${todo.projChoice}`
+
+            showProjectSection.innerHTML += `<div class="todo-note">
+            <input type="checkbox" name="projectName" id="ProjectName" class="projectCheckBox">
+            <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
+        </div>
+        <div class="todo-date show-date-icon">
+            <h3>${todo.date}</h3>
+        </div>`
+        })
+
+        selctProjectNote.insertBefore(showProjectSection,projectArea)
+
+    },
+
 }
 
 //Todo object that handles application logic
@@ -163,6 +194,8 @@ const todoApp = function(){
         const projChoiceArea = myUI.selectElement('project-choice')
 
         myTodo.initTodoItems(noteArea.value,scheduleArea.value,projChoiceArea.value)
+
+        myUI.showProjectInTheDom()
 
         myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
         
