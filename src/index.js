@@ -89,22 +89,26 @@ const UIController = {
 
         if(selctProjectSection){
             selctProjectSection.remove()
+        } 
+
+        if(this.todoList.length > 0){
+
+            this.todoList.forEach((todo) => {
+                
+                const projectHead = this.selectElement('proj-type-head')
+                projectHead.textContent = `${todo.projChoice}`
+                
+                showProjectSection.innerHTML += `<div class="todo-note" id="${todo.id}">
+                <input type="checkbox" name="projectName" id="ProjectName" class="projectCheckBox">
+                <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
+            </div>
+            <div class="todo-date show-date-icon">
+                <h3>${todo.date}</h3>
+            </div>`
+            })
+    
+            selctProjectNote.insertBefore(showProjectSection,projectArea)
         }
-
-        this.todoList.forEach((todo) => {
-            const projectHead = this.selectElement('proj-type-head')
-            projectHead.textContent = `${todo.projChoice}`
-
-            showProjectSection.innerHTML += `<div class="todo-note" id="${todo.id}">
-            <input type="checkbox" name="projectName" id="ProjectName" class="projectCheckBox">
-            <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
-        </div>
-        <div class="todo-date show-date-icon">
-            <h3>${todo.date}</h3>
-        </div>`
-        })
-
-        selctProjectNote.insertBefore(showProjectSection,projectArea)
 
     },
 
@@ -114,21 +118,31 @@ const UIController = {
 
     targetIsDone(eventObject){
         if(eventObject.target.id === 'ProjectName'){
-           const parentTarg = eventObject.target.parentElement.parentElement
+            const mainParentTarg = eventObject.target.parentElement.parentElement
+           const parentTarg = eventObject.target.parentElement
+           const siblingElement  = eventObject.target.parentElement.nextElementSibling
             const elementId = eventObject.target.parentElement.id
-           this.waitAndRemove(parentTarg,elementId,2000)
+           this.waitAndRemove(mainParentTarg,parentTarg,siblingElement,elementId,2000)
         }
     },
 
-    waitAndRemove(element,elementId,time){
+    waitAndRemove(mainParent,parentTarg,siblingElement,elementId,time){
         setTimeout(() => {
-            element.remove()
+            if(mainParent.childElementCount == 2){
+                parentTarg.remove()
+                siblingElement.remove()
+                mainParent.remove()
+            }else {
+                parentTarg.remove()
+                siblingElement.remove()
+            }
+
             this.todoList.forEach((todo)=>{
 
                 if(todo.id === parseInt(elementId)){
                    const idx = this.todoList.indexOf(todo)
                    this.todoList.splice(idx,1)
-                    console.log(this.todoList)
+                   localStorage.setItem('todo',JSON.stringify(this.todoList))
                 }
             })
         },time)
@@ -141,6 +155,10 @@ const Todo = {
 
     todoList: [],
 
+    defaultProj: {
+        value: 'Personal'
+    },
+
     initTodoItems(notes,date,projChoice){
         const tempObj = { }
         tempObj.notes = notes
@@ -148,8 +166,7 @@ const Todo = {
         tempObj.projChoice = projChoice
         tempObj.id = this.generateCodeForElements()
         this.todoList.push(tempObj)
-
-        console.log(this.todoList)
+        localStorage.setItem('todo',JSON.stringify(this.todoList))
     },
 
     addProjects(project){
@@ -171,10 +188,29 @@ const Todo = {
 
 }
 
+//local storage
+const persistData = {
+    getTodoFromStorage(){
+        const fromStorage = JSON.parse(localStorage.getItem('todo'))
+
+        if(fromStorage !== null){
+            fromStorage.forEach((obj)=>{
+                this.todoList.push(obj)
+            })
+            
+        }else {
+            this.todoList = []
+        }
+        
+    },
+}
+
 Object.setPrototypeOf(UIController,Todo)
+Object.setPrototypeOf(persistData,Todo)
+
 
 const todoApp = function(){
-
+    const myLocalStorage = Object.create(persistData)
     const myUI = Object.create(UIController)
     const myTodo = Object.create(Todo)
 
@@ -227,23 +263,32 @@ const todoApp = function(){
 
         myUI.showProjectInTheDom()
 
-        myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
-        
+        myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])  
     })
 
+
     const cancelTaskBtn = myUI.selectElement('cancelBtn')
-
     cancelTaskBtn.addEventListener('click',() => {
-
-        const noteBox = myUI.selectElement('proj-area')
-        
+        const noteBox = myUI.selectElement('proj-area')     
         myUI.removeTaskInputBox(noteBox,'active-block')
     })
 
+
     const projectNoteContainer = myUI.selectElement('project-notes')
     projectNoteContainer.addEventListener('click',(event) => {
-
         myUI.targetIsDone(event)
+    })
+
+    window.addEventListener('load',() => {
+       myLocalStorage.getTodoFromStorage()
+       myUI.showProjectInTheDom()
+
+       const selectProjectContainer = myUI.selectElement('proj-wrap')
+       myTodo.addProjects(myTodo.defaultProj.value)
+       myUI.createProjectList(selectProjectContainer,myTodo.defaultProj)
+
+       const projectListContainer = myUI.selectElement('project-choice')
+       myUI.createListProject(projectListContainer)
     })
 
 }
