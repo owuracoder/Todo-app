@@ -1,3 +1,5 @@
+import { format, compareAsc } from 'date-fns'
+
 //UI controller that handles all Dom stuffs
 const UIController = {
     selectElement(elementId){
@@ -103,7 +105,7 @@ const UIController = {
                 <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
             </div>
             <div class="todo-date show-date-icon">
-                <h3>${todo.date}</h3>
+                <h3>${format(new Date(todo.date), 'MMM do')}</h3>
             </div>`
             })
     
