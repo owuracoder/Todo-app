@@ -41,7 +41,6 @@
 
 .project-itms-wrapper {
   width: 100%;
-  padding: 0px 20px;
 }
 
 .project-head-wrapper {
@@ -93,7 +92,7 @@
 
 .circle-head {
   font-weight: 100;
-  flex: 1;
+  flex: 4;
 }
 
 .project-notes {
