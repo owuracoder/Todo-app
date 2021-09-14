@@ -78,7 +78,7 @@ const UIController = {
         })
     },
 
-    showProjectInTheDom(){
+    showProjectInTheDom(todoList){
         const selctProjectNote = this.selectElement('project-notes')
 
         const projectArea = this.selectElement('proj-area')
@@ -93,7 +93,7 @@ const UIController = {
             selctProjectSection.remove()
         } 
 
-        if(this.todoList.length > 0){
+        if(todoList.length > 0){
 
             this.todoList.forEach((todo) => {
                 
@@ -110,6 +110,8 @@ const UIController = {
             })
     
             selctProjectNote.insertBefore(showProjectSection,projectArea)
+
+            console.log('i was triggered')
         }
 
     },
@@ -125,6 +127,19 @@ const UIController = {
            const siblingElement  = eventObject.target.parentElement.nextElementSibling
             const elementId = eventObject.target.parentElement.id
            this.waitAndRemove(mainParentTarg,parentTarg,siblingElement,elementId,2000)
+        }
+    },
+
+    showMyProject(eventObj){
+        if(eventObj.target.className === 'circle-head'){
+            const projectName = eventObj.target.innerText
+            const tmpContainer = []
+            this.todoList.forEach((project)=>{
+                if(project.projChoice === projectName){
+                    tmpContainer.push(project)
+                }
+            })
+            this.showProjectInTheDom(tmpContainer)     
         }
     },
 
@@ -251,6 +266,7 @@ const todoApp = function(){
     const allProjectsContainer = myUI.selectElement('proj-wrap')
     allProjectsContainer.addEventListener('click',(event)=>{
         myUI.removeProject(event,'del-button')
+        myUI.showMyProject(event)
         const projectListContainer = myUI.selectElement('project-choice')
         myUI.createListProject(projectListContainer) 
     })
@@ -261,11 +277,15 @@ const todoApp = function(){
         const scheduleArea = myUI.selectElement('schedule')
         const projChoiceArea = myUI.selectElement('project-choice')
 
-        myTodo.initTodoItems(noteArea.value,scheduleArea.value,projChoiceArea.value)
+        if(noteArea.value !== "" && scheduleArea.value !== "" & projChoiceArea !== ""){
+            
+            myTodo.initTodoItems(noteArea.value,scheduleArea.value,projChoiceArea.value)
 
-        myUI.showProjectInTheDom()
+            myUI.showProjectInTheDom(myTodo.todoList)
 
-        myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])  
+            myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
+        }
+    
     })
 
 
@@ -281,9 +301,11 @@ const todoApp = function(){
         myUI.targetIsDone(event)
     })
 
+    
+
     window.addEventListener('load',() => {
        myLocalStorage.getTodoFromStorage()
-       myUI.showProjectInTheDom()
+       myUI.showProjectInTheDom(myTodo.todoList)
 
        const selectProjectContainer = myUI.selectElement('proj-wrap')
        myTodo.addProjects(myTodo.defaultProj.value)
