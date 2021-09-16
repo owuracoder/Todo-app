@@ -1,4 +1,4 @@
-import { format, compareAsc } from 'date-fns'
+import { format } from 'date-fns'
 
 //UI controller that handles all Dom stuffs
 const UIController = {
@@ -14,27 +14,38 @@ const UIController = {
         element.classList.add(className)
     },
 
-    createProjectList(projectContainer,userInput){
-        if(userInput.value != ''){
-            const newDiv = document.createElement('div')
-            newDiv.classList.add('circle')
-            newDiv.style.background = this.generateDynamicColors()
-    
-            const cirleWrapper = document.createElement('div')
-            cirleWrapper.classList.add('circles-wrapper')
-            cirleWrapper.classList.add('del-button')
-    
-            const circleHead  = document.createElement('h3')
-            circleHead.classList.add('circle-head')
-            circleHead.textContent = `${userInput.value}`
-           
-            cirleWrapper.appendChild(newDiv)
-            cirleWrapper.appendChild(circleHead)
-    
-            projectContainer.appendChild(cirleWrapper)
-    
-            userInput.value = ''
-        }
+    createProjectList(projectContainer){
+        if(projectContainer === undefined){
+            projectContainer = this.selectElement('proj-wrap')
+        }   
+        projectContainer.innerHTML = ''
+            this.projectList.forEach((project)=>{
+                const numb = this.showNumOfTask(project)
+                
+                const newDiv = document.createElement('div')
+                newDiv.classList.add('circle')
+                newDiv.style.background = this.generateDynamicColors()
+        
+                const cirleWrapper = document.createElement('div')
+                cirleWrapper.classList.add('circles-wrapper')
+                cirleWrapper.classList.add('del-button')
+        
+                const circleHead  = document.createElement('h3')
+                circleHead.classList.add('circle-head')
+                circleHead.textContent = `${project}`
+
+                const span = document.createElement('span')
+                span.classList.add('num-task')
+                span.innerText = numb
+
+                circleHead.appendChild(span)
+               
+                cirleWrapper.appendChild(newDiv)
+                cirleWrapper.appendChild(circleHead)
+        
+                projectContainer.appendChild(cirleWrapper)
+            })
+        
     },
 
     removeClassFromElement(element,className){
@@ -49,11 +60,26 @@ const UIController = {
 
     removeProject(eventObject,classIdentifier){
 
-        if(eventObject.target.classList.contains(classIdentifier)){
-            eventObject.target.remove()
-            const text = eventObject.target.textContent
-            this.removeItemFromProject(text)
+        const selectedElement = eventObject.target
+
+        if(selectedElement.classList.contains(classIdentifier)){
+            
+            const isDelBtn = window.getComputedStyle(document.querySelector(`.${classIdentifier}`), ':after').getPropertyValue('font-family')
+
+            if (isDelBtn){
+                selectedElement.remove()
+                const text = selectedElement.innerText
+                const lastText = text.length - 1
+                this.removeItemFromProject(text)
+
+                const nText = text.replace(text[lastText],'')
+
+
+                this.removeTaskFromTodo(nText)
+                
+            }
         }
+
     },
 
     createListProject(projectContainer){
@@ -95,14 +121,14 @@ const UIController = {
 
         if(todoList.length > 0){
 
-            this.todoList.forEach((todo) => {
-                
+            todoList.forEach((todo) => {
                 const projectHead = this.selectElement('proj-type-head')
                 projectHead.textContent = `${todo.projChoice}`
                 
                 showProjectSection.innerHTML += `<div class="todo-note" id="${todo.id}">
                 <input type="checkbox" name="projectName" id="ProjectName" class="projectCheckBox">
                 <label class="projectLabel" id="projectLabel" for="projectName">${todo.notes}</label>
+                <div class="edit-icon" id="edit-icon"><i class="far fa-edit"></i></div>
             </div>
             <div class="todo-date show-date-icon">
                 <h3>${format(new Date(todo.date), 'MMM do')}</h3>
@@ -111,7 +137,7 @@ const UIController = {
     
             selctProjectNote.insertBefore(showProjectSection,projectArea)
 
-            console.log('i was triggered')
+            
         }
 
     },
@@ -132,13 +158,18 @@ const UIController = {
 
     showMyProject(eventObj){
         if(eventObj.target.className === 'circle-head'){
-            const projectName = eventObj.target.innerText
+            
+            let projectName = eventObj.target.childNodes[0].data
+     
             const tmpContainer = []
             this.todoList.forEach((project)=>{
+                
                 if(project.projChoice === projectName){
+                    
                     tmpContainer.push(project)
                 }
             })
+
             this.showProjectInTheDom(tmpContainer)     
         }
     },
@@ -160,9 +191,62 @@ const UIController = {
                    const idx = this.todoList.indexOf(todo)
                    this.todoList.splice(idx,1)
                    localStorage.setItem('todo',JSON.stringify(this.todoList))
+                   this.createProjectList()
+                   this.showTotalNumsOfTask()
                 }
             })
         },time)
+    },
+
+    renderEditState(eventObj){
+
+        if(eventObj.target.classList.contains('fa-edit')){
+
+            const noteBox = this.selectElement('proj-area')
+            if(!noteBox.classList.contains('active-block')){
+                this.displayTextBox(noteBox,'active-block')
+            }
+            
+            const textArea = this.selectElement('notes')
+            const dateSchedule = this.selectElement('schedule')
+
+            const elementId = eventObj.target.parentElement.parentElement.id
+            
+            this.todoList.forEach((project)=>{
+                if(project.id === parseInt(elementId)){
+                    textArea.value = project.notes
+                    dateSchedule.value = project.date
+                    
+                    const idx = this.todoList.indexOf(project)
+                    this.todoList.splice(idx,1)
+                }
+            })
+            
+
+            
+        }
+    },
+
+    showNumOfTask(proj){
+        let numOfPrjs = null;
+        this.todoList.forEach((project)=>{
+            if(project.projChoice === proj){
+                numOfPrjs += 1
+            }
+        })
+        return numOfPrjs
+    },
+
+    showTotalNumsOfTask(){
+        this.showProjectInTheDom(this.todoList)
+        let num = 0
+         this.projectList.forEach((proj)=>{
+            num += this.showNumOfTask(proj)
+            
+        })
+        const totalNumElement = this.selectElement('all-num')
+        totalNumElement.innerHTML = ''
+        totalNumElement.innerText = num
     }
 }
 
@@ -171,10 +255,6 @@ const Todo = {
     projectList: [],
 
     todoList: [],
-
-    defaultProj: {
-        value: 'Personal'
-    },
 
     initTodoItems(notes,date,projChoice){
         const tempObj = { }
@@ -195,12 +275,23 @@ const Todo = {
             if(text === project){
                 const idx = this.projectList.indexOf(project)
                 this.projectList.splice(idx,1)
+
             }
         })
     },
 
     generateCodeForElements(){
         return Math.floor(Math.random() * 1000)
+    },
+
+    removeTaskFromTodo(task){
+        this.todoList.forEach((todoTask,index) => {
+            if(task === todoTask.projChoice){
+                this.todoList.splice(index,1)
+                localStorage.setItem('todo',JSON.stringify(this.todoList))
+                this.showProjectInTheDom(this.todoList)
+            }
+        })
     }
 
 }
@@ -210,15 +301,25 @@ const persistData = {
     getTodoFromStorage(){
         const fromStorage = JSON.parse(localStorage.getItem('todo'))
 
-        if(fromStorage !== null){
+        if(fromStorage.length > 0){
+            
             fromStorage.forEach((obj)=>{
                 this.todoList.push(obj)
+
+                this.projectList.push(obj.projChoice)
+
             })
             
         }else {
             this.todoList = []
+            this.projectList.push('Personal')
         }
         
+        this.projectList.forEach((project,index) => {
+            if(this.projectList.indexOf(project) != index){
+                this.projectList.splice(index,1)
+            }
+        })   
     },
 }
 
@@ -250,11 +351,11 @@ const todoApp = function(){
         const textInput = myUI.selectElement('project')
         myTodo.addProjects(textInput.value)
         const selectProjectContainer = myUI.selectElement('proj-wrap')
-        myUI.createProjectList(selectProjectContainer,textInput)
+        myUI.createProjectList(selectProjectContainer)
 
         const projectListContainer = myUI.selectElement('project-choice')
         myUI.createListProject(projectListContainer)
-       
+       textInput.value = ''
     })
 
     const inputCancelButton = myUI.selectElement('cancel-btn-input')
@@ -277,15 +378,16 @@ const todoApp = function(){
         const scheduleArea = myUI.selectElement('schedule')
         const projChoiceArea = myUI.selectElement('project-choice')
 
-        if(noteArea.value !== "" && scheduleArea.value !== "" & projChoiceArea !== ""){
+        if(noteArea.value.length > 0 && scheduleArea.value.length > 0 &&projChoiceArea.value.length > 0){
             
             myTodo.initTodoItems(noteArea.value,scheduleArea.value,projChoiceArea.value)
 
             myUI.showProjectInTheDom(myTodo.todoList)
 
             myUI.clearInputArea([noteArea,scheduleArea,projChoiceArea])
+
+            myUI.createProjectList()
         }
-    
     })
 
 
@@ -299,18 +401,20 @@ const todoApp = function(){
     const projectNoteContainer = myUI.selectElement('project-notes')
     projectNoteContainer.addEventListener('click',(event) => {
         myUI.targetIsDone(event)
+        myUI.renderEditState(event)
     })
 
+    const seeAllProjects = myUI.selectElement('see-icon')
+    seeAllProjects.addEventListener('click',()=>{
+        myUI.showTotalNumsOfTask()
+    })
     
 
     window.addEventListener('load',() => {
        myLocalStorage.getTodoFromStorage()
        myUI.showProjectInTheDom(myTodo.todoList)
-
        const selectProjectContainer = myUI.selectElement('proj-wrap')
-       myTodo.addProjects(myTodo.defaultProj.value)
-       myUI.createProjectList(selectProjectContainer,myTodo.defaultProj)
-
+       myUI.createProjectList(selectProjectContainer)
        const projectListContainer = myUI.selectElement('project-choice')
        myUI.createListProject(projectListContainer)
     })
