@@ -36,6 +36,11 @@ const UIController = {
 
                 const span = document.createElement('span')
                 span.classList.add('num-task')
+
+                if(numb!= null){
+                    span.classList.add('num-task-addon')
+                }
+
                 span.innerText = numb
 
                 circleHead.appendChild(span)
@@ -201,7 +206,6 @@ const UIController = {
     renderEditState(eventObj){
 
         if(eventObj.target.classList.contains('fa-edit')){
-
             const noteBox = this.selectElement('proj-area')
             if(!noteBox.classList.contains('active-block')){
                 this.displayTextBox(noteBox,'active-block')
@@ -210,19 +214,28 @@ const UIController = {
             const textArea = this.selectElement('notes')
             const dateSchedule = this.selectElement('schedule')
 
+            const projectCont = document.querySelector('.show-projects-section')
+            const elementTodo = eventObj.target.parentElement.parentElement
             const elementId = eventObj.target.parentElement.parentElement.id
-            
+            const elementDate = eventObj.target.parentElement.parentElement.nextElementSibling
+
             this.todoList.forEach((project)=>{
                 if(project.id === parseInt(elementId)){
+                    if(projectCont.childElementCount > 2){
+                        elementTodo.remove()
+                        elementDate.remove()
+                    }else {
+                        projectCont.remove()
+                    }
+            
                     textArea.value = project.notes
                     dateSchedule.value = project.date
-                    
                     const idx = this.todoList.indexOf(project)
                     this.todoList.splice(idx,1)
+                    this.createProjectList()
+                    localStorage.setItem('todo',JSON.stringify(this.todoList))
                 }
             })
-            
-
             
         }
     },
@@ -239,14 +252,20 @@ const UIController = {
 
     showTotalNumsOfTask(){
         this.showProjectInTheDom(this.todoList)
-        let num = 0
-         this.projectList.forEach((proj)=>{
+        let num = null
+         this.projectList.forEach((proj) => {
             num += this.showNumOfTask(proj)
             
         })
+
         const totalNumElement = this.selectElement('all-num')
-        totalNumElement.innerHTML = ''
-        totalNumElement.innerText = num
+        if(num == null){
+            totalNumElement.innerText = null
+        }else {
+            totalNumElement.innerHTML = ''
+            totalNumElement.classList.add('all-num-addon')
+            totalNumElement.innerText = num
+        }
     }
 }
 
