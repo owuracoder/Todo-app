@@ -320,7 +320,7 @@ const persistData = {
     getTodoFromStorage(){
         const fromStorage = JSON.parse(localStorage.getItem('todo'))
 
-        if(fromStorage.length > 0){
+        if(fromStorage !== null){
             
             fromStorage.forEach((obj)=>{
                 this.todoList.push(obj)
