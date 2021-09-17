@@ -320,7 +320,11 @@ const persistData = {
     getTodoFromStorage(){
         const fromStorage = JSON.parse(localStorage.getItem('todo'))
 
-        if(fromStorage !== null){
+        if(fromStorage == null || fromStorage.length == 0){
+            this.todoList = []
+            this.projectList.push('Personal')
+            
+        }else {
             
             fromStorage.forEach((obj)=>{
                 this.todoList.push(obj)
@@ -328,10 +332,6 @@ const persistData = {
                 this.projectList.push(obj.projChoice)
 
             })
-            
-        }else {
-            this.todoList = []
-            this.projectList.push('Personal')
         }
         
         this.projectList.forEach((project,index) => {
